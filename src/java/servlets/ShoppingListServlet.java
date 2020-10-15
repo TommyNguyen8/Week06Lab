@@ -85,5 +85,24 @@ public class ShoppingListServlet extends HttpServlet
             
             return;
         }
+        
+        if(action.equals("delete"))
+        {
+            shopList = (ArrayList<String>) session.getAttribute("shopList");
+            
+            if(shopList == null)
+            {
+                shopList = new ArrayList<>();
+            }
+            
+            String removeItem = request.getParameter("itemList");
+            
+            shopList.remove(removeItem);
+            
+            session.setAttribute("shopList", shopList);
+            
+            getServletContext().getRequestDispatcher("/WEB-INF/shoppingList.jsp")
+                    .forward(request, response);
+        }
     }
 }
