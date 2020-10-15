@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +27,20 @@ public class ShoppingListServlet extends HttpServlet
             return;
         }
         
+        String action = request.getParameter("action");
+        
+        if(action != null)
+        {
+            session.invalidate();
+            session = request.getSession();
+            request.setAttribute("message", "You have successfully logged out");
+            
+            getServletContext().getRequestDispatcher("/WEB-INF/register.jsp")
+                    .forward(request, response);
+            
+            return;
+        }
+        
         getServletContext().getRequestDispatcher("/WEB-INF/shoppingList.jsp")
                 .forward(request, response);
     }
@@ -36,20 +51,38 @@ public class ShoppingListServlet extends HttpServlet
     {
         HttpSession session = request.getSession();
         
+        ArrayList<String> shopList = new ArrayList<>();
+        
         String action = request.getParameter("action");
         String username = request.getParameter("username");
-        
-        if(action.equals("logout"))
-        {
-            session.invalidate();
-            session = request.getSession();
-            request.setAttribute("message", "You have successfully logged out");
-        }
         
         if(action.equals("register"))
         {
             session.setAttribute("username", username);
             response.sendRedirect("ShoppingList");
+            return;
+        }
+        
+        if(action.equals("add"))
+        {
+            shopList = (ArrayList<String>) session.getAttribute("shopList");
+            
+            if(shopList == null)
+            {
+                shopList = new ArrayList<>();
+            }
+            
+            String item = request.getParameter("item");
+            
+            shopList.add(item);
+            
+            request.setAttribute("item", item);
+       
+            session.setAttribute("shopList", shopList);
+            
+            getServletContext().getRequestDispatcher("/WEB-INF/shoppingList.jsp")
+                    .forward(request, response);
+            
             return;
         }
     }

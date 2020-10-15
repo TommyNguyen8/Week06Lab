@@ -27,8 +27,8 @@
  
         <form method="post" action="ShoppingList"> 
             <ul>
-                <c:forEach var="shopList" items="${shopList}">
-                    <li><input type="radio" name="item" value="${shopList}"></li>
+                <c:forEach var="shopLists" items="${shopList}">
+                    <li><input type="radio" name="itemList" value="${shopLists}">${shopLists}</li>
                 </c:forEach>
             </ul>
             <input type="submit" value="Delete">
